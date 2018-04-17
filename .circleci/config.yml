@@ -36,20 +36,20 @@ jobs:
       #- sleep 3
 
   deploy-repo:
-    hub:
+    #hub:
     #commit branch that will trigger the build process
     #branch: master
-    commands:
+    steps:
       #docker access credentials. Add these as environment variables to CircleCI project
-      - docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PWD
+      -run: docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PWD
       # private registry image to be pushed to. Replace Magalix with your registry's name'
       #- docker push magalix/simple-service
-      - docker push peterlamanna/simple-service
+      -rum: docker push peterlamanna/simple-service
 
   test:
-    override:
+    steps:
       # check if service is running as expected
-      - "curl http://localhost:8080/about"
+      -run: "curl http://localhost:8080/about"
       # - "[[ $(curl http://localhost:8080/about) = '{\"Text\":\"Welcome to the Simple Service API, v1.0\"}' ]]"
 
 workflows:
