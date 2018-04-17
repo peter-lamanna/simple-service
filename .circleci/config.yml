@@ -46,18 +46,18 @@ jobs:
       #- docker push magalix/simple-service
       -run: docker push peterlamanna/simple-service
 
-  test:
-    steps:
+#  test:
+#    steps:
       # check if service is running as expected
-      -run: "curl http://localhost:8080/about"
+#      -run: "curl http://localhost:8080/about"
       # - "[[ $(curl http://localhost:8080/about) = '{\"Text\":\"Welcome to the Simple Service API, v1.0\"}' ]]"
 
-workflows:
-  version: 2
-  build-deploy:
-    jobs:
-      - build
-      - deploy-repo:
-          requires: build
-       - test:
-           requires: deploy-repo
+#workflows:
+#  version: 2
+#  build-deploy:
+#    jobs:
+#      - build
+#      - deploy-repo:
+#          requires: build
+#       - test:
+#           requires: deploy-repo
