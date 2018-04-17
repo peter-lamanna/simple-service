@@ -41,10 +41,10 @@ jobs:
     #branch: master
 #    steps:
       #docker access credentials. Add these as environment variables to CircleCI project
-      - docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PWD
+      - run: docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PWD
       # private registry image to be pushed to. Replace Magalix with your registry's name'
       #- docker push magalix/simple-service
-      - docker push peterlamanna/simple-service
+      - run: docker push peterlamanna/simple-service
 
 #  test:
 #    steps:
