@@ -7,7 +7,7 @@ jobs:
     docker:
       # specify the version
       - image: circleci/golang:1.9
-      - image: ubuntu:14.04
+      #- image: ubuntu:14.04
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -30,7 +30,7 @@ jobs:
       - run: docker build --rm=false -t peterlamanna/simple-service .
       #-run: docker run -p 8080:8080 peterlamanna/simple-service:
       
-      background: true
+      #background: true
 
       # Give container 3 seconds to load before testing it.
       #- sleep 3
