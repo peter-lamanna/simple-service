@@ -58,8 +58,6 @@ workflows:
     jobs:
       - build
       - deploy-repo:
-          requires:
-            - build
+          requires: build
        - test:
-           requires:
-             - deploy-repo
+           requires: deploy-repo
