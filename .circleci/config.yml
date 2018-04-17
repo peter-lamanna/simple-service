@@ -44,7 +44,7 @@ jobs:
       -run: docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PWD
       # private registry image to be pushed to. Replace Magalix with your registry's name'
       #- docker push magalix/simple-service
-      -rum: docker push peterlamanna/simple-service
+      -run: docker push peterlamanna/simple-service
 
   test:
     steps:
@@ -60,3 +60,6 @@ workflows:
       - deploy-repo:
           requires:
             - build
+       - test:
+           requires:
+             - deploy-repo
