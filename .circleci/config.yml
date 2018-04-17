@@ -35,11 +35,11 @@ jobs:
       # Give container 3 seconds to load before testing it.
       #- sleep 3
 
-  deploy-repo:
+#  deploy-repo:
     #hub:
     #commit branch that will trigger the build process
     #branch: master
-    steps:
+#    steps:
       #docker access credentials. Add these as environment variables to CircleCI project
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PWD
       # private registry image to be pushed to. Replace Magalix with your registry's name'
