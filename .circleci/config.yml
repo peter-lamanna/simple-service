@@ -53,6 +53,7 @@ jobs:
       # - "[[ $(curl http://localhost:8080/about) = '{\"Text\":\"Welcome to the Simple Service API, v1.0\"}' ]]"
 
 workflows:
+  version: 2
   build-deploy:
     jobs:
       - deploy-repo:
