@@ -28,7 +28,7 @@ jobs:
       - run: go get -v -t -d ./...
       #- run: go test -v ./...
       - run: docker build --rm=false -t peterlamanna/simple-service .
-      -run: docker run -p 8080:8080 peterlamanna/simple-service:
+      #-run: docker run -p 8080:8080 peterlamanna/simple-service:
       
       background: true
 
