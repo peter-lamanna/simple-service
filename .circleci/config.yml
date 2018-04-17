@@ -27,7 +27,7 @@ jobs:
       # specify any bash command here prefixed with `run: `
       - run: go get -v -t -d ./...
       #- run: go test -v ./...
-      - run: docker build --rm=false -t peterlamanna/simple-service .
+      - docker build --rm=false -t peterlamanna/simple-service .
       #-run: docker run -p 8080:8080 peterlamanna/simple-service:
       
       background: true
@@ -53,7 +53,6 @@ override:
 # - "[[ $(curl http://localhost:8080/about) = '{\"Text\":\"Welcome to the Simple Service API, v1.0\"}' ]]"
 
 workflows:
-  version: 2
   build-deploy:
     jobs:
       - build
