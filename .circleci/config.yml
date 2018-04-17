@@ -27,18 +27,18 @@ jobs:
       # specify any bash command here prefixed with `run: `
       - run: go get -v -t -d ./...
       #- run: go test -v ./...
-      - docker build --rm=false -t peterlamanna/simple-service .
+      - run: docker build --rm=false -t peterlamanna/simple-service .
       #-run: docker run -p 8080:8080 peterlamanna/simple-service:
       
       background: true
 
       # Give container 3 seconds to load before testing it.
-      - sleep 3
+      #- sleep 3
 
   deploy-repo:
     hub:
     #commit branch that will trigger the build process
-    branch: master
+    #branch: master
     commands:
       #docker access credentials. Add these as environment variables to CircleCI project
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PWD
@@ -55,7 +55,6 @@ jobs:
 workflows:
   build-deploy:
     jobs:
-      - build
       - deploy-repo:
           requires:
             - build
