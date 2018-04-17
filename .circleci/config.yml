@@ -2,6 +2,11 @@
 #
 # Check https://circleci.com/docs/2.0/language-go/ for more details
 version: 2
+
+machine:
+services:
+- docker
+
 jobs:
   build:
     docker:
@@ -26,3 +31,34 @@ jobs:
       # specify any bash command here prefixed with `run: `
       - run: go get -v -t -d ./...
       #- run: go test -v ./...
+
+dependencies:
+pre:
+# compile go application before building docker image
+- go build -o simple-service
+override:
+#docker container command. Make sure you replace Magalix with your registry name
+#- docker build --rm=false -t magalix/simple-service .
+#- docker run -p 8080:8080 magalix/simple-service:
+- docker build --rm=false -t peterlamanna/simple-service .
+- docker run -p 8080:8080 peterlamanna/simple-service:
+background: true
+# Give container 3 seconds to load before testing it.
+- sleep 3
+
+test:
+override:
+# check if service is running as expected
+- "curl http://localhost:8080/about"
+# - "[[ $(curl http://localhost:8080/about) = '{\"Text\":\"Welcome to the Simple Service API, v1.0\"}' ]]"
+
+deployment:
+hub:
+#commit branch that will trigger the build process
+branch: master
+commands:
+#docker access credentials. Add these as environment variables to CircleCI project
+- docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PWD
+# private registry image to be pushed to. Replace Magalix with your registry's name'
+#- docker push magalix/simple-service
+- docker push peterlamanna/simple-service
