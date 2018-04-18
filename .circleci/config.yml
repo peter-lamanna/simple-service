@@ -45,13 +45,13 @@ jobs:
       - run: docker build --rm=false -t peterlamanna/simple-service .
       
       # Run the docker image so that the service can be tested.
-      -run: docker run -p 8080:8080 peterlamanna/simple-service:
+      - run: docker run -p 8080:8080 peterlamanna/simple-service
       
       # Give the container 3 seconds to load before testing it.
       - sleep 3
 
       # Check if service is running and responding as expected.
-      -run: curl http://localhost:8080/about
+      - run: curl http://localhost:8080/about
       # - "[[ $(curl http://localhost:8080/about) = '{\"Text\":\"Welcome to the Simple Service API, v1.0\"}' ]]"
 
       # Log in to the docker using the access credentials that were added as
