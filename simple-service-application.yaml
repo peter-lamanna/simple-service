@@ -1,0 +1,34 @@
+description: A simple microservice for evaluating the Magalix platform.
+kpi_policies:
+- definition:
+    max_latency: 400ms
+  name: http-port
+name: simple-service-application
+services:
+- containers:
+  - description: A simple microservice docker image for evaluating the Magalix platform.
+    image_url: peterlamanna/simple-service
+    name: simple-service-container
+    ports:
+    - container_port: 8080
+      name: http-port
+    resources:
+      io: 10
+      memory: 512
+      vcpu: 1
+  description: A simple microservice for evaluating the Magalix platform.
+  name: simple-service
+  ports:
+  - is_public: true
+    is_websocket: false
+    kpi_policy: http-port
+    path: /
+    port: 8080
+    target_port: http-port
+  resources:
+    replicas: 1
+  restart: always
+target_cloud:
+  region: us-east-1
+  type: aws
+  zone: us-east-1a

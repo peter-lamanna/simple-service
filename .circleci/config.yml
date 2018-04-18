@@ -1,66 +1,62 @@
 # Golang CircleCI 2.0 configuration file
 #
-# Check https://circleci.com/docs/2.0/language-go/ for more details
+# Check https://circleci.com/docs/2.0/language-go/ for more details.
 version: 2
 jobs:
   build:
     docker:
-      # specify the version
+      # Specify the go version to use in the primary container.
+      # The CircleCI images contain all the tools for building go programs.
       - image: circleci/golang:1.9
-      #- image: ubuntu:14.04
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
+      # Specify any service dependencies here if necessary.
+      # CircleCI maintains a library of pre-built docker images documented at
+      #
+      #  https://circleci.com/docs/2.0/circleci-images/
 
-    #### TEMPLATE_NOTE: go expects specific checkout path representing url
-    #### expecting it in the form of
+    #### TEMPLATE_NOTE: go expects specific checkout path in the form of a URL.
+    #### For example:
+    ####
     ####   /go/src/github.com/circleci/go-tool
     ####   /go/src/bitbucket.org/circleci/go-tool
+    ####
     #working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
     working_directory: /go/src/github.com/peter-lamanna/simple-service
 
     steps:
+      # Checkout the code from git repository.
       - checkout
-      # specify any bash command here prefixed with `run: `
+
+      #### specify any bash command here prefixed with "- run: "
+
+      # Install go packages
       - run: go get -v -t -d ./...
+      
+      # Build go program
       - run: go build -o simple-service
+      
       #- run: go test -v ./...
+      
+      # Setup docker environment with docker daemon running.
       - setup_remote_docker:
           docker_layer_caching: true
-      - run: docker build --rm=false -t peterlamanna/simple-service .
-      #-run: docker run -p 8080:8080 peterlamanna/simple-service:
       
-      #background: true
+      # Build the docker image based as defined in the Dockerfile.
+      - run: docker build --rm=false -t peterlamanna/simple-service .
+      
+      # Run the docker image so that the service can be tested.
+      -run: docker run -p 8080:8080 peterlamanna/simple-service:
+      
+      # Give the container 3 seconds to load before testing it.
+      - sleep 3
 
-      # Give container 3 seconds to load before testing it.
-      #- sleep 3
-
-#  deploy-repo:
-    #hub:
-    #commit branch that will trigger the build process
-    #branch: master
-#    steps:
-      #docker access credentials. Add these as environment variables to CircleCI project
-      #- run: docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PWD
-      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PWD
-      # private registry image to be pushed to. Replace Magalix with your registry's name'
-      #- docker push magalix/simple-service
-      - run: docker push peterlamanna/simple-service
-
-#  test:
-#    steps:
-      # check if service is running as expected
-#      -run: "curl http://localhost:8080/about"
+      # Check if service is running and responding as expected.
+      -run: curl http://localhost:8080/about
       # - "[[ $(curl http://localhost:8080/about) = '{\"Text\":\"Welcome to the Simple Service API, v1.0\"}' ]]"
 
-#workflows:
-#  version: 2
-#  build-deploy:
-#    jobs:
-#      - build
-#      - deploy-repo:
-#          requires: build
-#       - test:
-#           requires: deploy-repo
+      # Log in to the docker using the access credentials that were added as
+      # environment variables to CircleCI project.
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PWD
+      
+      # Save the docker image to a registry as the latest, no tag specified.
+      - run: docker push peterlamanna/simple-service
