@@ -51,22 +51,21 @@ jobs:
       # Build the docker image based as defined in the Dockerfile.
       - run: docker build --rm=false -t peterlamanna/simple-service .
       
-      # Run the docker image in the background so that the service can be tested.
-      - run: |
-          docker run -d -p 8080:8080 --name simple-service peterlamanna/simple-service
-          docker exec simple-service curl --retry 3 --retry-connrefused http://localhost:8080/about
-          docker stop simple-service
-      
-      # Give the container 3 seconds to load before testing it.
-      #- run: sleep 3
-
-      # Check if service is running and responding as expected.
-      #- run: docker exec my-app curl --retry 3 --retry-connrefused http://localhost:8080/about
+      # Test the docker image.  Run it in the background, send a request to it
+      # and then stop it.
       # - "[[ $(curl http://localhost:8080/about) = '{\"Text\":\"Welcome to the Simple Service API, v1.0\"}' ]]"
-
-      # Log in to the docker using the access credentials that were added as
-      # environment variables to CircleCI project.
-      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PWD
+      - run:
+          name: Test Docker Image
+          command: |
+            docker run -d -p 8080:8080 --name simple-service peterlamanna/simple-service
+            docker exec simple-service curl --retry 3 --retry-connrefused http://localhost:8080/about
+            docker stop simple-service
       
-      # Save the docker image to a registry as the latest, no tag specified.
-      - run: docker push peterlamanna/simple-service
+      # Log in to the docker using the access credentials that were added as
+      # environment variables to CircleCI project.  Save the docker image to
+      # a repository as the latest, no tag specified.
+      - run:
+          name: Save Image to Docker Hub Repository
+          command: |
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PWD
+            docker push peterlamanna/simple-service
