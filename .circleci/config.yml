@@ -53,7 +53,7 @@ jobs:
       
       # Run the docker image so that the service can be tested.
       - run: |
-          docker run -p 8080:8080 peterlamanna/simple-service
+          docker run --stop-timeout 5 -p 8080:8080 peterlamanna/simple-service
           docker exec my-app curl --retry 3 --retry-connrefused http://localhost:8080/about
       
       # Give the container 3 seconds to load before testing it.
