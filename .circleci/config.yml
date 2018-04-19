@@ -51,10 +51,11 @@ jobs:
       # Build the docker image based as defined in the Dockerfile.
       - run: docker build --rm=false -t peterlamanna/simple-service .
       
-      # Run the docker image so that the service can be tested.
+      # Run the docker image in the background so that the service can be tested.
       - run: |
-          docker run --stop-timeout 5 -p 8080:8080 peterlamanna/simple-service
-          docker exec my-app curl --retry 3 --retry-connrefused http://localhost:8080/about
+          docker run -d -p 8080:8080 peterlamanna/simple-service
+          docker exec peterlamanna/simple-service curl --retry 3 --retry-connrefused http://localhost:8080/about
+          docker stop peterlamanna/simple-service
       
       # Give the container 3 seconds to load before testing it.
       #- run: sleep 3
