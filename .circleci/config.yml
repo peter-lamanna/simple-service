@@ -5,15 +5,22 @@ version: 2
 jobs:
   build:
     docker:
-      # Specify the go version to use in the primary container.
-      # The CircleCI images contain all the tools for building go programs.
+      # Specify a go version to use in the primary container.  This is the
+      # container in which all steps will execute.
       - image: circleci/golang:1.9
 
-      # Specify any service dependencies here if necessary.
+      # The CircleCI images contain all the tools for building programs.
       # CircleCI maintains a library of pre-built docker images documented at
       #
       #  https://circleci.com/docs/2.0/circleci-images/
+      #
+      # Docker compose is used to run each of the secondary images specified
+      # here in a container to satisfy any dependencies the application may
+      # have when it is run and tested.
 
+    #### The working directory specifies a workspace that persists across jobs
+    #### in a single workflow.
+    ####
     #### TEMPLATE_NOTE: go expects specific checkout path in the form of a URL.
     #### For example:
     ####
@@ -24,7 +31,7 @@ jobs:
     working_directory: /go/src/github.com/peter-lamanna/simple-service
 
     steps:
-      # Checkout the code from git repository.
+      # Checkout the code from git repository into the working directory.
       - checkout
 
       #### specify any bash command here prefixed with "- run: "
@@ -51,7 +58,7 @@ jobs:
       - run: sleep 3
 
       # Check if service is running and responding as expected.
-      - run: curl http://localhost:8080/about
+      - run: docker exec my-app curl --retry 3 --retry-connrefused http://localhost:8080/about
       # - "[[ $(curl http://localhost:8080/about) = '{\"Text\":\"Welcome to the Simple Service API, v1.0\"}' ]]"
 
       # Log in to the docker using the access credentials that were added as
