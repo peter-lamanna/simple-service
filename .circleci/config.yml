@@ -51,17 +51,16 @@ jobs:
       # Build the docker image based as defined in the Dockerfile.
       - run: docker build --rm=false -t peterlamanna/simple-service .
       
-      # Test the docker image.  Run it in the background, send a request to it
-      # and then stop it.
+      # Test the docker image.  Run it in the background, send a request and
+      # then stop it.
       # - "[[ $(curl http://localhost:8080/about) = '{\"Text\":\"Welcome to the Simple Service API, v1.0\"}' ]]"
       # http://localhost:8080/about) = Welcome to Magalix Simple Service!! Your Path is: test!
       - run:
           name: Test Docker Image
           command: |
             docker run -d -p 8080:8080 --name simple-service peterlamanna/simple-service
-            sleep 5
             docker exec simple-service apt-get install curl
-            docker exec simple-service "curl --retry 3 --retry-connrefused http://localhost:8080/test"
+            docker exec simple-service "curl --retry 5 --retry-connrefused http://localhost:8080/test | bash"
             docker stop simple-service
       
       # Log in to the docker using the access credentials that were added as
