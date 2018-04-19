@@ -48,7 +48,7 @@ jobs:
       - run: docker run -p 8080:8080 peterlamanna/simple-service
       
       # Give the container 3 seconds to load before testing it.
-      - sleep 3
+      - run: sleep 3
 
       # Check if service is running and responding as expected.
       - run: curl http://localhost:8080/about
