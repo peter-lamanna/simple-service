@@ -53,9 +53,9 @@ jobs:
       
       # Run the docker image in the background so that the service can be tested.
       - run: |
-          docker run -d -p 8080:8080 peterlamanna/simple-service
-          docker exec peterlamanna/simple-service curl --retry 3 --retry-connrefused http://localhost:8080/about
-          docker stop peterlamanna/simple-service
+          docker run -d -p 8080:8080 --name simple-service peterlamanna/simple-service
+          docker exec simple-service curl --retry 3 --retry-connrefused http://localhost:8080/about
+          docker stop simple-service
       
       # Give the container 3 seconds to load before testing it.
       #- run: sleep 3
