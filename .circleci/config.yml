@@ -60,6 +60,7 @@ jobs:
           command: |
             docker run -d -p 8080:8080 --name simple-service peterlamanna/simple-service
             sleep 5
+            docker exec simple-service apt-get install curl
             docker exec simple-service "curl --retry 3 --retry-connrefused http://localhost:8080/test"
             docker stop simple-service
       
