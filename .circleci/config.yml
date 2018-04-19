@@ -59,7 +59,7 @@ jobs:
           name: Test Docker Image
           command: |
             docker run -d -p 8080:8080 --name simple-service peterlamanna/simple-service
-            docker exec simple-service "/bin/curl -S --retry 5 --retry-connrefused http://localhost:8080/test"
+            docker exec simple-service "/usr/local/bin/curl -S --retry 5 --retry-connrefused http://localhost:8080/test"
             docker stop simple-service
       
       # Log in to the docker using the access credentials that were added as
